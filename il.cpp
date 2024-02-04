@@ -443,7 +443,7 @@ static ExprId MoveToCoprocessor(unsigned cop, LowLevelILFunction& il, size_t sto
 			{il.Const(4, cop), il.Const(4, reg), il.Const(4, sel), srcExpr});
 }
 
-bool GetLowLevelILForInstruction(Architecture* arch, uint64_t addr, LowLevelILFunction& il, Instruction& instr, size_t addrSize)
+bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t addr, LowLevelILFunction& il, Instruction& instr, size_t addrSize)
 {
 	LowLevelILLabel trueLabel, falseLabel, doneLabel, dirFlagSet, dirFlagClear, dirFlagDone;
 	InstructionOperand& op1 = instr.operands[0];
@@ -1166,6 +1166,12 @@ bool GetLowLevelILForInstruction(Architecture* arch, uint64_t addr, LowLevelILFu
 					il.RegisterSplit(4, op2.reg | 1, op2.reg & (~1)))));
 			}
 			break;
+		case MIPS_SYNC:
+			il.AddInstruction(il.Intrinsic(
+					{},
+					MipsIntrinsic::MIPS_INTRIN_SYNC,
+					{}));
+			break;
 		case MIPS_ADDR:
 		case MIPS_DSLLV:
 		case MIPS_DSRA32:
@@ -1227,7 +1233,6 @@ bool GetLowLevelILForInstruction(Architecture* arch, uint64_t addr, LowLevelILFu
 		case MIPS_PAUSE:
 		case MIPS_PREF:
 		case MIPS_PREFX:
-		case MIPS_SYNC:
 		case MIPS_SYNCI:
 		case MIPS_TLBP:
 		case MIPS_TLBR:

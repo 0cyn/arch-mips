@@ -15,11 +15,13 @@ enum MipsIntrinsic : uint32_t
 		MIPS_INTRIN_DMFC_UNIMPLEMENTED,
 		MIPS_INTRIN_DMTC0,
 		MIPS_INTRIN_DMTC_UNIMPLEMENTED,
+		MIPS_INTRIN_SYNC,
 		MIPS_INTRIN_INVALID=0xFFFFFFFF,
 };
 
 bool GetLowLevelILForInstruction(
 		BinaryNinja::Architecture* arch,
+        int32_t version,
 		uint64_t addr,
 		BinaryNinja::LowLevelILFunction& il,
 		mips::Instruction& instr,

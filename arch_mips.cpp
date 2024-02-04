@@ -513,7 +513,7 @@ public:
 				il.AddInstruction(il.If(GetConditionForInstruction(il, instr, GetAddressSize()), trueCode, falseCode));
 				il.MarkLabel(trueCode);
 				il.SetCurrentAddress(this, addr + instr.size);
-				GetLowLevelILForInstruction(this, addr + instr.size, il, secondInstr, GetAddressSize());
+				GetLowLevelILForInstruction(this, m_version, addr + instr.size, il, secondInstr, GetAddressSize());
 				for (size_t i = 0; i < instrInfo.branchCount; i++)
 				{
 					if (instrInfo.branchType[i] == TrueBranch)
@@ -539,7 +539,7 @@ public:
 				nop = il.Nop();
 				il.AddInstruction(nop);
 
-				GetLowLevelILForInstruction(this, addr + instr.size, il, secondInstr, GetAddressSize());
+				GetLowLevelILForInstruction(this, m_version, addr + instr.size, il, secondInstr, GetAddressSize());
 
 				LowLevelILInstruction delayed;
 				uint32_t clobbered = BN_INVALID_REGISTER;
@@ -566,7 +566,7 @@ public:
 				}
 				else
 				{
-					status = GetLowLevelILForInstruction(this, addr, il, instr, GetAddressSize());
+					status = GetLowLevelILForInstruction(this, m_version, addr, il, instr, GetAddressSize());
 				}
 
 				if (clobbered != BN_INVALID_REGISTER)
@@ -662,12 +662,12 @@ public:
 				len = 8;
 				il.SetCurrentAddress(this, addrToUse);
 				base->operation = store ? MIPS_SW : MIPS_LW;
-				return GetLowLevelILForInstruction(this, addrToUse, il, *base, GetAddressSize());
+				return GetLowLevelILForInstruction(this, m_version, addrToUse, il, *base, GetAddressSize());
 			}
 		}
 
 		len = instr.size;
-		return GetLowLevelILForInstruction(this, addr, il, instr, GetAddressSize());
+		return GetLowLevelILForInstruction(this, m_version, addr, il, instr, GetAddressSize());
 	}
 
 	virtual bool GetInstructionInfo(const uint8_t* data, uint64_t addr, size_t maxLen, InstructionInfo& result) override
@@ -828,6 +828,8 @@ public:
 				return "moveDwordToCoprocessor";
 			case MIPS_INTRIN_DMTC_UNIMPLEMENTED:
 				return "moveDwordToCoprocessorUnimplemented";
+			case MIPS_INTRIN_SYNC:
+				return "sync";
 			default:
 				return "";
 		}
@@ -845,6 +847,7 @@ public:
 			MIPS_INTRIN_DMFC_UNIMPLEMENTED,
 			MIPS_INTRIN_DMTC0,
 			MIPS_INTRIN_DMTC_UNIMPLEMENTED,
+			MIPS_INTRIN_SYNC
 		};
 	}
 
@@ -898,6 +901,7 @@ public:
 					NameAndType("selector", Type::IntegerType(4, false)),
 					NameAndType("value", Type::IntegerType(8, false)),
 				};
+			case MIPS_INTRIN_SYNC:
 			default:
 				return vector<NameAndType>();
 		}
