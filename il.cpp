@@ -1172,6 +1172,31 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 					MipsIntrinsic::MIPS_INTRIN_SYNC,
 					{}));
 			break;
+
+		case MIPS_TLBWI:
+			il.AddInstruction(il.Intrinsic(
+					{},
+					MipsIntrinsic::MIPS_INTRIN_TLBWI,
+					{
+						il.Register(4, REG_INDEX),
+						il.Register(4, REG_ENTRY_HI),
+						il.Register(4, REG_ENTRY_LO0),
+						il.Register(4, REG_ENTRY_LO1),
+						il.Register(4, REG_PAGE_MASK)
+					}));
+			break;
+		case MIPS_POR:
+			il.AddInstruction(
+					il.SetRegister(get_register_size(version, instr.operation, op1.reg),
+						op1.reg,
+						il.Or(
+							get_register_size(version, instr.operation, op1.reg),
+							il.Register(get_register_size(version, instr.operation, op2.reg), op2.reg),
+							il.Register(get_register_size(version, instr.operation, op3.reg), op3.reg)
+						)
+					)
+					);
+			break;
 		case MIPS_ADDR:
 		case MIPS_DSLLV:
 		case MIPS_DSRA32:
@@ -1236,7 +1261,6 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 		case MIPS_SYNCI:
 		case MIPS_TLBP:
 		case MIPS_TLBR:
-		case MIPS_TLBWI:
 		case MIPS_TLBWR:
 		case MIPS_WAIT:
 		case MIPS_WRPGPR:

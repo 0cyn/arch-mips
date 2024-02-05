@@ -830,6 +830,8 @@ public:
 				return "moveDwordToCoprocessorUnimplemented";
 			case MIPS_INTRIN_SYNC:
 				return "sync";
+			case MIPS_INTRIN_TLBWI:
+				return "tlbWriteIndex";
 			default:
 				return "";
 		}
@@ -847,7 +849,8 @@ public:
 			MIPS_INTRIN_DMFC_UNIMPLEMENTED,
 			MIPS_INTRIN_DMTC0,
 			MIPS_INTRIN_DMTC_UNIMPLEMENTED,
-			MIPS_INTRIN_SYNC
+			MIPS_INTRIN_SYNC,
+			MIPS_INTRIN_TLBWI
 		};
 	}
 
@@ -900,6 +903,14 @@ public:
 					NameAndType("register", Type::IntegerType(4, false)),
 					NameAndType("selector", Type::IntegerType(4, false)),
 					NameAndType("value", Type::IntegerType(8, false)),
+				};
+			case MIPS_INTRIN_TLBWI:
+				return {
+					NameAndType("index", Type::IntegerType(4, false)),
+					NameAndType("vPageNumer", Type::IntegerType(4, false)),
+					NameAndType("pFrameNumber", Type::IntegerType(4, false)),
+					NameAndType("permissions", Type::IntegerType(4, false)),
+					NameAndType("pageMask", Type::IntegerType(4, false))
 				};
 			case MIPS_INTRIN_SYNC:
 			default:

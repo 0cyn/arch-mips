@@ -1289,6 +1289,28 @@ const char* get_register(Reg reg)
 	return NULL;
 }
 
+const uint32_t get_register_size(uint32_t version, Operation operation, uint32_t reg)
+{
+	uint32_t addressSize;
+	switch (version)
+	{
+		case MIPS_64:
+			addressSize = 8;
+		case MIPS_32:
+		case MIPS_R5900:
+		default:
+			addressSize = 4;
+	}
+	switch (operation)
+	{
+		case MIPS_POR:
+			if (version == MIPS_R5900)
+				return 16;
+		default:
+			return addressSize;
+	}
+}
+
 const char* get_flag(enum Flag flag)
 {
 	if (flag >= 0 && flag < END_FLAG)

@@ -1120,6 +1120,7 @@ namespace mips
 
 		const char* get_operation(Operation operation);
 		const char* get_register(Reg reg);
+		const uint32_t get_register_size(uint32_t version, Operation operation, uint32_t reg);
 		const char* get_flag(enum Flag flag);
 		const char* get_hint(Hint hint);
 #ifdef __cplusplus
