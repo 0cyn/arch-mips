@@ -783,6 +783,10 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 		case MIPS_SD:
 			il.AddInstruction(il.Store(8, GetILOperandMemoryAddress(il, op2, addrSize), ReadILOperand(il, instr, 1, registerSize)));
 			break;
+		case MIPS_SQ:
+			if (version == MIPS_R5900)
+				il.AddInstruction(il.Store(16, GetILOperandMemoryAddress(il, op2, addrSize), ReadILOperand(il, instr, 1, registerSize)));
+			break;
 		case MIPS_SWC1:
 			il.AddInstruction(MoveFromCoprocessor(1, il, 4, LLIL_TEMP(0), op1.immediate, 0));
 			il.AddInstruction(WriteILOperand(il, instr, 1, addrSize, il.Register(4, LLIL_TEMP(0))));
@@ -837,6 +841,10 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 			break;
 		case MIPS_LD:
 			il.AddInstruction(SetRegisterOrNop(il, 8, registerSize, op1.reg, ReadILOperand(il, instr, 2, registerSize)));
+			break;
+		case MIPS_LQ:
+			if (version == MIPS_R5900)
+				il.AddInstruction(SetRegisterOrNop(il, 16, 16, op1.reg, ReadILOperand(il, instr, 2, 16)));
 			break;
 		case MIPS_SRA:
 		case MIPS_SRAV:
