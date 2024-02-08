@@ -445,6 +445,8 @@ static ExprId MoveToCoprocessor(unsigned cop, LowLevelILFunction& il, size_t sto
 
 bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t addr, LowLevelILFunction& il, Instruction& instr, size_t addrSize)
 {
+	if (version == MIPS_R5900)
+		addrSize = 8;
 	LowLevelILLabel trueLabel, falseLabel, doneLabel, dirFlagSet, dirFlagClear, dirFlagDone;
 	InstructionOperand& op1 = instr.operands[0];
 	InstructionOperand& op2 = instr.operands[1];
