@@ -1207,6 +1207,80 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 					)
 					);
 			break;
+		case MIPS_LDL:
+		{
+			// $temp0 = mem shift
+			il.AddInstruction(
+				il.SetRegister(addrSize,
+					LLIL_TEMP(0),
+					il.Mult(addrSize,
+						il.Const(addrSize, 8),
+						il.And(addrSize,
+							il.Add(addrSize,
+								   il.Const(addrSize, op2.immediate),
+								   il.Register(addrSize, op2.reg)
+							),
+							il.Const(addrSize, 7)
+						)
+					)
+				)
+			);
+
+			// $rt = $rt & $mask
+			il.AddInstruction(
+				il.SetRegister(addrSize,
+					op1.reg,
+					il.And(addrSize,
+						il.Register(addrSize, op1.reg),
+						il.Sub(addrSize,
+							  il.Const(addrSize, 1),
+							  il.ShiftLeft(addrSize,
+										   il.Const(addrSize, 1),
+										   il.Sub(addrSize,
+												  il.Const(addrSize, addrSize * 8),
+												  il.Register(addrSize, LLIL_TEMP(0))
+										   )
+							  )
+						)
+					)
+				)
+			);
+
+			// $rt = $rt | ( mem_contents << $shift )
+			il.AddInstruction(
+				il.SetRegister(addrSize,
+					op1.reg,
+					il.Or(addrSize,
+						il.Register(addrSize, op1.reg),
+						il.ShiftLeft(addrSize,
+							il.Load(addrSize,
+								il.And(addrSize,
+									il.Add(addrSize,
+										il.Const(addrSize, op2.immediate),
+										il.Register(addrSize, op2.reg)
+									),
+									il.Not(addrSize,
+										il.Const(addrSize, 7)
+									)
+								)
+							),
+							il.ModUnsigned(addrSize,
+								il.Sub(addrSize,
+									il.Sub(addrSize,
+										il.Const(addrSize, addrSize * 8),
+										il.Register(addrSize, LLIL_TEMP(0))
+										),
+									 il.Const(addrSize, 8)
+								),
+								il.Const(addrSize, addrSize * 8)
+							)
+						)
+					)
+				)
+			);
+			break;
+		}
+		case MIPS_LDR:
 		case MIPS_ADDR:
 		case MIPS_DSLLV:
 		case MIPS_DSRA32:
@@ -1215,8 +1289,6 @@ bool GetLowLevelILForInstruction(Architecture* arch, int32_t version, uint64_t a
 		case MIPS_DSLV:
 		case MIPS_DSUB:
 		case MIPS_DSUBU:
-		case MIPS_LDL:
-		case MIPS_LDR:
 		case MIPS_LDXC1:
 		case MIPS_LLD:
 		case MIPS_LLO:
