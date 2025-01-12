@@ -52,3 +52,7 @@ if(BN_INTERNAL_BUILD)
 		LIBRARY_OUTPUT_DIRECTORY ${BN_CORE_PLUGIN_DIR}
 		RUNTIME_OUTPUT_DIRECTORY ${BN_CORE_PLUGIN_DIR})
 endif()
+
+
+# Support cmake --install
+bn_install_plugin(arch_mips)

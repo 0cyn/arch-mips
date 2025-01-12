@@ -1160,6 +1160,8 @@ namespace mips
 		CNREG2_424F_HSH_STARTSHA512,
 		CNREG2_425D_GFM_XORMUL1,
 
+		R5900_SA,
+
 		// Last valid register
 		END_REG
 	};
@@ -1205,8 +1207,8 @@ namespace mips
 		MIPS_3,
 		MIPS_4,
 		MIPS_32,
-		MIPS_R5900,
 		MIPS_64,
+		MIPS_R5900,
 		MIPS_VERSION_END,
 	};
 
