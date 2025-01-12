@@ -2,18 +2,11 @@
 
 This is the MIPS architecture plugin that ships with Binary Ninja.
 
-## Issues
-
-Issues for this repository have been disabled. Please file an issue for this repository at https://github.com/Vector35/binaryninja-api/issues. All previously existing issues for this repository have been transferred there as well.
-
-
 ## Building
 
 Building the architecture plugin requires `cmake` 3.9 or above. You will also need the [Binary Ninja API source](https://github.com/Vector35/binaryninja-api).
 
-First, set the `BN_API_PATH` environment variable to the path containing the Binary Ninja API source tree.
-
-Run `cmake`. This can be done either from a separate build directory or from the source directory. If your app is installed in a non-default location, set BN_INSTALL_DIR in your cmake invocation, like `cmake -DBN_INSTALL_DIR=/Applications/Binary\ Ninja\ DEV.app/'.  Once that is complete, run `make` in the build directory to compile the plugin.
+Run `cmake`. This can be done either from a separate build directory or from the source directory. Once that is complete, run `make` in the build directory to compile the plugin.
 
 The plugin can be found in the root of the build directory as `libarch_mips.so`, `libarch_mips.dylib` or `arch_mips.dll` depending on your platform.
 

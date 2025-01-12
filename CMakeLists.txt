@@ -2,22 +2,14 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 project(arch_mips)
 
-if((NOT BN_API_PATH) AND (NOT BN_INTERNAL_BUILD))
-	set(BN_API_PATH $ENV{BN_API_PATH})
-	if(NOT BN_API_PATH)
-		message(FATAL_ERROR "Provide path to Binary Ninja API source in BN_API_PATH")
-	endif()
-endif()
-
-if((NOT BN_INSTALL_DIR) AND (NOT BN_INTERNAL_BUILD) AND WIN32)
-	set(BN_INSTALL_DIR $ENV{BN_INSTALL_DIR})
-	if(NOT BN_INSTALL_DIR)
-		message(FATAL_ERROR "Provide path to Binary Ninja installation in BN_INSTALL_DIR")
-	endif()
-endif()
-
 if(NOT BN_INTERNAL_BUILD)
-	add_subdirectory(${BN_API_PATH} ${PROJECT_BINARY_DIR}/api)
+	find_path(
+			BN_API_PATH
+			NAMES binaryninjaapi.h
+			HINTS ../.. binaryninjaapi $ENV{BN_API_PATH}
+			REQUIRED
+	)
+	add_subdirectory(${BN_API_PATH} binaryninjaapi)
 endif()
 
 file(GLOB SOURCES
@@ -59,6 +51,4 @@ if(BN_INTERNAL_BUILD)
 	set_target_properties(arch_mips PROPERTIES
 		LIBRARY_OUTPUT_DIRECTORY ${BN_CORE_PLUGIN_DIR}
 		RUNTIME_OUTPUT_DIRECTORY ${BN_CORE_PLUGIN_DIR})
-else()
-	bn_install_plugin(arch_mips)
 endif()
